@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.student.Exception.StudentNotFoundException;
@@ -14,6 +15,7 @@ import com.student.repository.StudentRepository;
 
 @Service
 @Transactional
+@Profile(value = { "local", "dev", "prod" })
 public class StudentServiceImpl implements StudentService {
 
 	@Autowired
@@ -47,30 +49,30 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public Student getStudentByRollNumAndPassword(String rollNumber, String password) throws Exception {
+	public Student getStudentByRollNumAndPassword(String rollNumber, String password) throws StudentNotFoundException {
 		Optional<Student> studentResponse = repository.findByRollNumberAndPassword(rollNumber, password);
 		if (!studentResponse.isPresent()) {
-			throw new Exception("Student Data not found");
+			throw new StudentNotFoundException("Student Data not found");
 		}
 		return studentResponse.get();
 	}
 
 	@Override
-	public Student getStudentDataByName(String studentName) throws Exception {
+	public Student getStudentDataByName(String studentName) throws StudentNotFoundException {
 		// Optional<Student> studentResponse =
 		// repository.findByStudentName(studentName);
 		Optional<Student> studentResponse = repository.getByStudentName(studentName);
 		if (!studentResponse.isPresent()) {
-			throw new Exception("Student Data not found");
+			throw new StudentNotFoundException("Student Data not found");
 		}
 		return studentResponse.get();
 	}
 
 	@Override
-	public Student updateStudent(Student student) throws Exception {
+	public Student updateStudent(Student student) throws StudentNotFoundException {
 		Optional<Student> response = repository.findById(student.getStudentId());
 		if (!response.isPresent()) {
-			throw new Exception("Student Id doesnt exists");
+			throw new StudentNotFoundException("Student Id doesnt exists");
 		}
 
 		response.get().setStudentId(student.getStudentId());
@@ -95,23 +97,23 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public void updateStudentName(Integer studentId, String studentName) throws Exception {
+	public void updateStudentName(Integer studentId, String studentName) throws StudentNotFoundException {
 
 		Optional<Student> response = repository.findById(studentId);
-        if (!response.isPresent()) {
-            throw new Exception("Data not found");
-        }
-         repository.updateStudentName(studentName,studentId);
+		if (!response.isPresent()) {
+			throw new StudentNotFoundException("Data not found");
+		}
+		repository.updateStudentName(studentName, studentId);
 	}
 
 	@Override
-	public String deleteStudentDataById(Integer studentId) throws Exception {
+	public String deleteStudentDataById(Integer studentId) throws StudentNotFoundException {
 		Optional<Student> response = repository.findById(studentId);
-        if (!response.isPresent()) {
-            throw new Exception("Data not found");
-        }		
-        repository.deleteById(studentId);
-        return "Deleted successfully";
+		if (!response.isPresent()) {
+			throw new StudentNotFoundException("Data not found");
+		}
+		repository.deleteById(studentId);
+		return "Deleted successfully";
 	}
 
 }
