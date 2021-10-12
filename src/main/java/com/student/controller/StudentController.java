@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.student.entity.Student;
 import com.student.service.StudentService;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/api")
 public class StudentController {
@@ -26,12 +28,14 @@ public class StudentController {
 	StudentService studentService;
 
 	@PostMapping("/student/create")
+	@ApiOperation(value = "Student Details Creation API", notes = "Please provide all the info for Student Registration creation", response = Student.class)
 	public ResponseEntity<String> createStudent(@RequestBody Student student) throws Exception {
 		String response = studentService.createStudentData(student);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
 	@GetMapping("/get/student/{studentId}")
+	@ApiOperation(value = "Get Student Details API", notes = "Please provide Details to get Student Data", response = Student.class)
 	public ResponseEntity<Student> getStudentById(@PathVariable("studentId") Integer StudentId) throws Exception {
 		Student response = studentService.getStudentDataById(StudentId);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -55,23 +59,23 @@ public class StudentController {
 		Student response = studentService.getStudentDataByName(studentName);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
-	
+
 	@PutMapping("/update/student")
 	public ResponseEntity<Student> updateStudent(@RequestBody Student student) throws Exception {
 		Student response = studentService.updateStudent(student);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
-	
+
 	@PutMapping("/update/student/{studentId}/{studentName}")
-	public ResponseEntity<String> updateStudentName(@PathVariable("studentId") Integer studentId, @PathVariable("studentName") String studentName)
-			throws Exception {
+	public ResponseEntity<String> updateStudentName(@PathVariable("studentId") Integer studentId,
+			@PathVariable("studentName") String studentName) throws Exception {
 		studentService.updateStudentName(studentId, studentName);
 		return ResponseEntity.status(HttpStatus.OK).body("updated student name");
 	}
-	
+
 	@DeleteMapping("/delete/student/{studentId}")
 	public ResponseEntity<String> deleteStudentById(@PathVariable("studentId") Integer StudentId) throws Exception {
 		String response = studentService.deleteStudentDataById(StudentId);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
-	} 
+	}
 }

@@ -23,6 +23,7 @@ public class StudentServiceImpl implements StudentService {
 
 	@Override
 	public String createStudentData(Student student) throws Exception {
+		student.getAddressEntity().setStudent(student);
 		Student studentResponse = repository.save(student);
 		if (studentResponse == null) {
 			throw new Exception("Student data not saved");
