@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.student.entity.Status;
 import com.student.entity.Student;
 
 @Repository
@@ -34,5 +35,4 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
 	@Modifying
 	@Query("update Student set studentName =:studentName where studentId = :studentId")
 	void updateStudentName(@Param("studentName") String studentName, @Param("studentId") Integer studentId);
-
 }

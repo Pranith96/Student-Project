@@ -78,4 +78,5 @@ public class StudentController {
 		String response = studentService.deleteStudentDataById(StudentId);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
+
 }

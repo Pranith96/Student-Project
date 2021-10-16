@@ -1,14 +1,20 @@
 package com.student.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -46,14 +52,31 @@ public class Student implements Serializable {
 	@JoinColumn(name = "addressId")
 	private Address addressEntity;
 
+	@Enumerated(EnumType.STRING)
+	private Status status;
+
+	@ManyToOne(cascade = CascadeType.ALL, targetEntity = College.class)
+	@JoinColumn(name = "collegeId")
+	private College college;
+
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "student_course", joinColumns = { @JoinColumn(name = "studentId") }, inverseJoinColumns = {
+			@JoinColumn(name = "courseId") })
+	private List<Courses> courses;
+
 	public Student(Integer studentId, String studentName, String address, String mobileNumber, String rollNumber,
-			String password) {
+			String password, Address addressEntity, Status status, College college, List<Courses> courses) {
+		super();
 		this.studentId = studentId;
 		this.studentName = studentName;
 		this.address = address;
 		this.mobileNumber = mobileNumber;
 		this.rollNumber = rollNumber;
 		this.password = password;
+		this.addressEntity = addressEntity;
+		this.status = status;
+		this.college = college;
+		this.courses = courses;
 	}
 
 	public Student() {
@@ -113,6 +136,30 @@ public class Student implements Serializable {
 
 	public void setAddressEntity(Address addressEntity) {
 		this.addressEntity = addressEntity;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	public College getCollege() {
+		return college;
+	}
+
+	public void setCollege(College college) {
+		this.college = college;
+	}
+
+	public List<Courses> getCourses() {
+		return courses;
+	}
+
+	public void setCourses(List<Courses> courses) {
+		this.courses = courses;
 	}
 
 }

@@ -2,6 +2,7 @@ package com.student.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.student.Exception.StudentNotFoundException;
+import com.student.entity.Status;
 import com.student.entity.Student;
 import com.student.repository.StudentRepository;
 
@@ -24,6 +26,7 @@ public class StudentServiceImpl implements StudentService {
 	@Override
 	public String createStudentData(Student student) throws Exception {
 		student.getAddressEntity().setStudent(student);
+		student.setStatus(Status.ACTIVE);
 		Student studentResponse = repository.save(student);
 		if (studentResponse == null) {
 			throw new Exception("Student data not saved");
@@ -42,7 +45,8 @@ public class StudentServiceImpl implements StudentService {
 
 	@Override
 	public List<Student> getAllStudents() throws Exception {
-		List<Student> response = repository.findAll();
+		List<Student> response = repository.findAll().stream().filter(data -> data.getStatus().equals(Status.ACTIVE))
+				.collect(Collectors.toList());
 		if (response.isEmpty() || response == null) {
 			throw new Exception("Student Data is Empty");
 		}
